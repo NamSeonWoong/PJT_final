@@ -1,0 +1,35 @@
+{% load bootstrap4 %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  {% bootstrap_css %}
+</head>
+<body>
+  <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <a class="navbar-brand" href="{% url 'movies:index' %}">Home</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse d-flex justify-content-end" id="navbarNavAltMarkup">
+      <div class="navbar-nav ">
+          <a class="nav-item nav-link" href="{% url 'accounts:index' %}">유저 정보보기</a>
+        {% if user.is_authenticated %}
+          <p class="nav-item nav-link">{{user}}</p>
+          <a class="nav-item nav-link" href="{% url 'accounts:logout' %}">로그아웃</a>
+        {% else %}
+          <a class="nav-item nav-link" href="{% url 'accounts:signup' %}">회원가입</a>
+          <a class="nav-item nav-link" href="{% url 'accounts:login' %}">로그인</a>
+        {% endif %}
+      </div>
+    </div>
+  </nav>
+  <div class="container">
+    {% block body %}
+    {% endblock %}
+  </div>
+</body>
+</html>
