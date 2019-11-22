@@ -1,0 +1,7 @@
+{% extends 'base.html' %}
+{% block body %}
+<h2 class="my-2">사용자 목록</h2>
+{% for user_info in user_list %}
+  <a href="{% url 'accounts:detail' user_info.id %}"><h5>{{user_info.username}}</h5></a>
+{% endfor %}
+{% endblock %}

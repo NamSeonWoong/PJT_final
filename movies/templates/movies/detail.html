@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+{% load bootstrap4 %}
+{% block body %}
+  <div class="jumbotron">
+    <div class="row">
+      <div class="d-inline-flex align-items-start">  
+        <div class="d-inline-flex mx-3">
+          <img src="{{movie.poster_url}}" alt="" style="width: 26rem;">
+        </div>
+        <div class="mx-3">
+          <h1 class="display-4">{{movie.title}}</h1>
+          <span>누적 관객수 : {{movie.audience}}</span>
+          <h3 class="my-3"> 줄거리 </h3>
+          <p>{{movie.description}}</p>
+
+          <form action="{% url 'movies:movie_like' movie.id %}" method="POST">
+            {% csrf_token %}
+            {% if user in movie.like_users.all %}
+              <input type="submit" value="좋아요 취소" class="btn btn-primary">
+            {% else %}
+              <input type="submit" value="좋아요" class="btn btn-primary">
+            {% endif %}
+          </form>
+          <p>{{movie.like_users.count}}</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+    {% if user.is_authenticated %}
+    <form action="{% url 'movies:create_review' movie.id %}" method="POST">
+      {% csrf_token %}
+      {% bootstrap_form form %}
+      <input type="submit" value="제출" class="btn btn-primary">
+    </form>
+    {% endif %}
+  
+  <hr>
+  {% for review in movie.review_set.all %}
+    <div class="alert alert-primary d-flex justify-content-between" role="alert">
+      <p> 한줄평 : {{review.content}}</p>
+      <p> 평점 :  {{review.score}}</p>
+      
+      {% if review.user == user %}
+        <form action="{% url 'movies:delete_review' movie.id review.id %}" method="POST">
+          {% csrf_token %}
+          <input type="submit" class="btn btn-danger" value="삭제">
+        </form>
+      {% endif %}
+    </div>
+  {% endfor %}
+
+  
+{% endblock %}
