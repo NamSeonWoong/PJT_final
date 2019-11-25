@@ -31,6 +31,14 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    # allauth 세팅
+    'django.contrib.sites',
+    # 필요한 제공자 추가
+    'allauth.socialaccount.providers.kakao',
+    'allauth.socialaccount.providers.naver',
     'accounts',
     'bootstrap4',
     'movies',
@@ -120,6 +128,22 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 
+# 파비콘 설정
 STATIC_URL = '/static/'
 
 AUTH_USER_MODEL = 'accounts.User'
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, "Manage", 'static')
+]
+
+# 소셜 로그인
+AUTHENTICATION_BACKENDS = (
+    # Needed to login by username in Django admin, regardless of `allauth`
+    'django.contrib.auth.backends.ModelBackend',
+
+    # `allauth` specific authentication methods, such as login by e-mail
+    'allauth.account.auth_backends.AuthenticationBackend',
+)
+SITE_ID=1
+LOGIN_REDIRECT_URL ='movies:index'
+
