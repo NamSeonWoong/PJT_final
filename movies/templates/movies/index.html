@@ -3,7 +3,7 @@
 {% block body %}
   <div class="row">
     {% for movie in movies %}
-      <div class="card" style="width: 15rem;">
+      <div class="card" style="width: 20rem;">
         <a href="{% url 'movies:detail' movie.id %}"><img src="{{movie.poster_url}}" class="card-img-top" alt="..."></a>
         <div class="card-body">
           <h5 class="card-title">{{movie.title}}</h5>

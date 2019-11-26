@@ -9,16 +9,19 @@
         </div>
         <div class="mx-3">
           <h1 class="display-4">{{movie.title}}</h1>
-          <span>누적 관객수 : {{movie.audience}}</span>
-          <h3 class="my-3"> 줄거리 </h3>
-          <p>{{movie.description}}</p>
+          <!-- <span>누적 관객수 : {{movie.audience}}</span> -->
+          <!-- <h3 class="my-3">  </h3> -->
+          <p>감독: {{movie.director}}</p>
+          <p>개봉일: {{movie.pubdate}}</p>
+          <p>주연: {{movie.cast}}</p>
+          <p>장르: {{movie.genre}}</p>
 
           <form action="{% url 'movies:movie_like' movie.id %}" method="POST">
             {% csrf_token %}
             {% if user in movie.like_users.all %}
-              <input type="submit" value="좋아요 취소" class="btn btn-primary">
+              <input type="submit" value="👍🏻" >
             {% else %}
-              <input type="submit" value="좋아요" class="btn btn-primary">
+              <input type="submit" value="👍🏻" >
             {% endif %}
           </form>
           <p>{{movie.like_users.count}}</p>

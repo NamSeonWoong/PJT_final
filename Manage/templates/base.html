@@ -8,11 +8,20 @@
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>Document</title>
   <link rel="shortcut icon" href="{% static 'slate.jpg' %}">
+  <link href="https://fonts.googleapis.com/css?family=Hind+Vadodara|Sunflower:300&display=swap" rel="stylesheet">
   {% bootstrap_css %}
+  <style>
+    li {
+      font-family: 'Hind Vadodara', sans-serif;
+    }
+    div {
+      font-family: 'Sunflower', sans-serif;
+    }
+  </style>
 </head>
-<body>
+<body background="{% static 'main.webp' %}">
   <nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <a class="navbar-brand" href="{% url 'movies:index' %}">Home</a>
+    <a class="navbar-brand" href="{% url 'movies:index' %}">🍿Home🥤</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
@@ -20,7 +29,7 @@
       <div class="navbar-nav ">
           <a class="nav-item nav-link" href="{% url 'accounts:index' %}">유저 정보보기</a>
         {% if user.is_authenticated %}
-          <p class="nav-item nav-link">{{user}}</p>
+          <p class="nav-item nav-link">{{user}}님 안녕하세요!</p>
           <a class="nav-item nav-link" href="{% url 'accounts:logout' %}">로그아웃</a>
         {% else %}
           <a class="nav-item nav-link" href="{% url 'accounts:signup' %}">회원가입</a>
@@ -28,10 +37,17 @@
         {% endif %}
       </div>
     </div>
+  
+    
+    <!-- <div class="container">
+      <img src="{% static 'main.webp' %}" style="margin-left: auto; margin-right: auto; display: block;" width="2000" height="250">
+    </div> -->
+    
   </nav>
   <div class="container">
     {% block body %}
     {% endblock %}
   </div>
+  {% bootstrap_javascript jquery='full' %}
 </body>
 </html>

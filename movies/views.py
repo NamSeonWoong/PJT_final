@@ -2,106 +2,82 @@ from django.shortcuts import render, redirect, get_object_or_404
 from .models import Movie, Review
 from .forms import ReviewForm
 from django.contrib.auth.decorators import login_required
-import requests
 from decouple import config
 from datetime import timedelta, datetime
-import requests                  
-import datetime					
-import json
-import os
-import sys
+import requests, datetime, json, os, sys
 import urllib.request
+from bs4 import BeautifulSoup
+from datetime import timedelta, datetime
 
+# 영진위api 관련
+movie_key = config('MOVIE_KEY')
+movie_url = 'http://www.kobis.or.kr/kobisopenapi/webservice/rest/boxoffice/searchWeeklyBoxOfficeList.json'
+movie_detail = 'http://www.kobis.or.kr/kobisopenapi/webservice/rest/movie/searchMovieInfo.json'
+
+# 네이버api 관련
+naver_url = 'https://openapi.naver.com/v1/search/movie.json'
+naver_id= config('NAVER_ID')
+naver_secret = config('NAVER_SECRET')
+headers = {
+    'X-Naver-Client-Id' : naver_id,
+    'X-Naver-Client-Secret' : naver_secret
+}
+
+movies=[]
+Cd = []
 def start(request):
-    now = datetime.datetime.now()
-    nowdate = now.strftime('%Y')
-    movie_key = config('MOVIE_KEY')
-    movie_url = "http://www.kobis.or.kr/kobisopenapi/webservice/rest/movie/searchMovieList.json"
-    # last_week = (now + (datetime.timedelta(weeks=-1))).strftime('%Y%m%d')
-    my_url = f'{movie_url}?key={movie_key}&itemPerPage=5&openStartDt={nowdate}&openEndDt={nowdate}'
-    res = requests.get(my_url).json()
+    startweek = datetime(2019, 11, 16)
+    for k in range(15):
+        # 영진위 주간 api요청
+        startweek_str = startweek.strftime("%Y%m%d")
+        url = f'{movie_url}?key={movie_key}&targetDt={startweek_str}&movieCd&movieNm&audiCnt&weekGb=0'
+        res = requests.get(url).json()
+        for i in range(10):
+            # 주간 정보들 1~10위까지
+            movie_Cd = res.get('boxOfficeResult').get('weeklyBoxOfficeList')[i].get('movieCd')
+            if not movie_Cd in Cd:
+                Cd.append(movie_Cd)
+                movie_audiAcc = res.get('boxOfficeResult').get('weeklyBoxOfficeList')[i].get('audiAcc')
+                movie_Nm = res.get('boxOfficeResult').get('weeklyBoxOfficeList')[i].get('movieNm')
+                movie_Dt = res.get('boxOfficeResult').get('weeklyBoxOfficeList')[i].get('openDt')
 
-    result = {}
-    boxoffice = []
+                # 영진위 상세정보 api요청
+                detailurl = f'{movie_detail}?key={movie_key}&movieCd={movie_Cd}'
+                res_detail = requests.get(detailurl).json()
+                movie_genre = res_detail.get('movieInfoResult').get('movieInfo').get('genres')[0].get('genreNm')
 
-    client_id= config('NAVER_ID')
-    client_secret= config('NAVER_SECRET')
+                # 네이버 api요청
+                naver_data = f'{naver_url}?query={movie_Nm}'
+                res_naver = requests.get(naver_data, headers = headers).json()
 
-    movieNm = res.get('movieListResult').get('movieList') 
-    # print(movieNm)
-    for i in movieNm:
-        # print('==========================================')
-        # print(i)
-        encText = urllib.parse.quote(i["movieNm"])
-        movie_url = "https://openapi.naver.com/v1/search/movie?query=" + encText
-        request = urllib.request.Request(movie_url)
-        request.add_header("X-Naver-Client-Id",client_id)
-        request.add_header("X-Naver-Client-Secret",client_secret)
-        response = urllib.request.urlopen(request)
-        rescode = response.getcode()
+                if res_naver.get('items'):
+                    movie_cast = res_naver.get('items')[0].get('actor').split('|')
+                    movie_directors = res_naver.get('items')[0].get('director').split('|')
+                    img_url_code = res_naver.get("items")[0].get("link")[51:]
+                    img_url = f'https://movie.naver.com/movie/bi/mi/basic.nhn?code={img_url_code}'
+                    resp = requests.get(img_url)
+                    soup = BeautifulSoup(resp.content, 'html.parser')
+                    img = soup.select('#content > div.article > div.mv_info_area > div.poster > a > img')
+                    movie_img = img[0].get('src')
+ 
+                    # 영화정보 추가
+                    movies.append([movie_Cd,movie_Nm,movie_genre,movie_Dt,movie_directors,movie_cast,movie_img,movie_audiAcc])
+        # 날짜 변경
+        startweek = startweek - timedelta(7)
+    # 누적 관객수에 따른 내림차순 정렬
+    movies.sort(key=lambda x:int(x[-1]), reverse=True)
 
-        if(rescode==200):
-            response_body = response.read()
-            temp = response_body.decode('utf-8')
-            
-            js = json.loads(temp)
-            # print('##################################################')
-            # print(js)
-            if js["items"]:
-                img_url = js["items"][0]["image"]
-                director = js["items"][0]["director"]
-                cast = js["items"][0]["actor"]
-            else:
-                continue
-            # print(img_url)
-        else:
-            # print("Error Code:" + rescode)
-            pass
-        
-        result[i['movieCd']]= {
-                                'movieNm': i['movieNm'],
-                                'repGenreNm': i['repGenreNm'],
-                                'openDt': i['openDt'],
-                                'img_url': img_url,
-                                'director': director[:],
-                                'cast': cast,
-                            }
-        print(result)
-    # 위에 for문에서 저장한 result값을 빈리스트에 .append 한다.
-    idx = 1
-    for i in result:
-        # boxoffice.append({
-    #         'model': 'movies.Movie',
-    #         'pk': idx,
-    #         'fields': {
-    #             'movieCd': i,
-    #             'title': result[i]['movieNm'],0000
-
-
-    #             'genre': result[i]['repGenreNm'],
-    #             'pubdate': result[i]['openDt'],
-    #             'poster_url': result[i]['img_url'],
-    #             'director': result[i]['director'],
-    #             'cast': result[i]['cast'],
-    #                 }
-    #         })
-    #     idx += 1
-        # Genre.objects.create(
-        #     name = result[i]['repGenreNm']
-        # )
+    for i in range(len(movies)):
         Movie.objects.create(
-            title = result[i]['movieNm'],
-            pubdate = result[i]['openDt'],
-            poster_url = result[i]['img_url'],
-            director = result[i]['director'],
-            cast = result[i]['cast'],
-            genre = result[i]['repGenreNm']
+            title = movies[i][1],
+            pubdate = movies[i][3],
+            poster_url = movies[i][6],
+            director = movies[i][4],
+            cast = movies[i][5],
+            genre = movies[i][2],
+            audience = movies[i][0]
         )
-    # with open('boxoffice.json', 'w', newline='', encoding='utf-8') as f:
-    #     json.dump(boxoffice, f, ensure_ascii=False, indent="\t")
     return redirect('movies:index')
-##############################################################################################
-# title, audience, poster_url, genre, rating
 
 
 def index(request):
@@ -130,7 +106,7 @@ def create_review(request, id):
             review.user = request.user
             review.movie = movie
             review.save()
-            return redirect('movies:detail', id)
+        return redirect('movies:detail', id)
         return redirect('movies:index')
 
 @login_required

@@ -20,7 +20,7 @@
 <h3>좋아하는 영화</h3>
 <div class="row">
 {% for movie in user_info.like_movies.all %}
-  <div class="card col-3 my-3 mx-1" style="width: 18rem;">
+  <div class="card col-3 my-3 mx-1" style="width: 24rem;">
     <a href="{% url 'movies:detail' movie.id %}"><img src="{{movie.poster_url}}" class="card-img-top" alt="..."></a>
     <div class="card-body">
       <h5 class="card-title">{{movie.title}}</h5>
