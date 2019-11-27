@@ -82,12 +82,23 @@ headers = {
 
 
 def index(request):
+    res = []
     movies = Movie.objects.all()
     paginator = Paginator(movies, 9) 
     page = request.GET.get('page')
     movies = paginator.get_page(page)
+    for movie in Movie.objects.all():
+        res.append([movie.title,movie.like_users.count(),movie.id])
+
+    res.sort(key=lambda x:x[1], reverse=True)
+    first = {'title': res[0][0], 'id': res[0][2]}
+    second = {'title': res[1][0], 'id': res[1][2]}
+    third = {'title': res[2][0], 'id': res[2][2]}
     context = {
-        'movies': movies
+        'movies': movies,
+        'first': first,
+        'second': second,
+        'third': third
     }
     return render(request, 'movies/index.html', context)
 
@@ -97,6 +108,7 @@ def detail(request, id):
     context = {
         'movie': movie,
         'form': form,
+        'update':0,
     }
     return render(request, 'movies/detail.html', context)
 
@@ -122,6 +134,28 @@ def delete_review(request,movie_id,review_id):
     return redirect('movies:detail', movie_id)
 
 @login_required
+def update_review(request,movie_id,review_id):
+    movie = get_object_or_404(Movie, id=movie_id)
+    review = get_object_or_404(Review, id=review_id)
+    if request.user ==review.user:
+        if request.method == "POST":
+            form = ReviewForm(request.POST, instance=review)
+            if form.is_valid():
+                review = form.save()
+            return redirect('movies:detail',movie_id)
+        else:
+            form = ReviewForm(instance=review)
+        context={
+            'movie':movie,
+            'form':form,
+            'review':review,
+            'update':1,
+        }
+        return render(request,'movies/detail.html',context)
+    else:
+        return redirect('movies:detail', movie_id)
+
+@login_required
 def movie_like(request, id):
     if request.method == "POST":
         movie = get_object_or_404(Movie, id=id)
@@ -132,4 +166,49 @@ def movie_like(request, id):
             movie.like_users.add(user)
         
         return redirect('movies:detail', id)
+
+def search(request):
+    res = []
+    if request.method == 'POST':
+        keyword = request.POST.get("keyword")
+        movies = Movie.objects.filter(title__icontains=keyword)
+        paginator = Paginator(movies, 9) 
+        page = request.GET.get('page')
+        movies = paginator.get_page(page)
+
+        for movie in Movie.objects.all():
+            res.append([movie.title,movie.like_users.count(),movie.id])
+
+        res.sort(key=lambda x:x[1], reverse=True)
+        first = {'title': res[0][0], 'id': res[0][2]}
+        second = {'title': res[1][0], 'id': res[1][2]}
+        third = {'title': res[2][0], 'id': res[2][2]}
+
+        context = {
+            'movies': movies,
+            'first': first,
+            'second': second,
+            'third': third
+        }
+        return render(request, 'movies/search.html', context)
+    else:
+        movies = Movie.objects.all()
+        paginator = Paginator(movies, 9) 
+        page = request.GET.get('page')
+        movies = paginator.get_page(page)
+        for movie in Movie.objects.all():
+            res.append([movie.title,movie.like_users.count(),movie.id])
+
+        res.sort(key=lambda x:x[1], reverse=True)
+        first = {'title': res[0][0], 'id': res[0][2]}
+        second = {'title': res[1][0], 'id': res[1][2]}
+        third = {'title': res[2][0], 'id': res[2][2]}
+        
+        context = {
+            'movies': movies,
+            'first': first,
+            'second': second,
+            'third': third
+        }
+        return render(request, 'movies/search.html',context)
     

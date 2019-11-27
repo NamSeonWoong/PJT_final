@@ -8,7 +8,7 @@ urlpatterns = [
     path('<int:id>/',views.detail, name="detail"),
     path('<int:id>/reviews/new/', views.create_review, name="create_review"),
     path('<int:movie_id>/reviews/<int:review_id>/delete/', views.delete_review, name="delete_review"),
-    # path('<int:movie_id>/reviews/<int:review_id>/edit/', views.edit_review, name="edit_review"),
+    path('<int:movie_id>/reviews/<int:review_id>/update/', views.update_review, name="update_review"),
     path('<int:id>/like/', views.movie_like, name="movie_like"),
-    
+    path('search/',views.search, name='search'),
 ]

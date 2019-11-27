@@ -47,10 +47,20 @@
     </div> -->
     
   </nav>
-  <div class="container">
-    {% block body %}
-    {% endblock %}
+
+  <div class="row" style="padding-top: 5rem;padding-left:27rem;padding-right:2rem;">
+    <div class="col-12 col-md-9">
+      <!-- <div class="container"> -->
+      {% block body %}
+      {% endblock %}
+      <!-- </div> -->
+    </div>
+    <div class="col-12 col-md-3">
+      {% block body2 %}
+      {% endblock %}
+    </div>
   </div>
+  
   {% bootstrap_javascript jquery='full' %}
 </body>
 </html>

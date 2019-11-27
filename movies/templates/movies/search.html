@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 {% load bootstrap_pagination %}
-​
+
 {% block body %}
   <div class="row">
     {% for movie in movies %}
@@ -12,11 +12,12 @@
       </div>
     {% endfor %}
   </div>
-  <div class="container mt-3 ml-5" style="display:flex; justify-content: center; align-items: center;" >
-    {% bootstrap_paginate movies %}
-  </div>
 {% endblock %}
-​
+
+{% block bodyt %}
+  {% bootstrap_paginate movies %}
+{% endblock %}
+
 {%block body2%}
   <h2>영화검색</h2>
   <form action="{%url 'movies:search' %}" method="post" class="form-inline my-2 my-lg-0">
@@ -25,7 +26,7 @@
     <button class="btn btn-warning my-2 my-sm-0" type="submit">Search</button>
   </form>
   <br>
-  <h3>추천영화</h3>
+  <h3 class="mt-5">추천영화</h3>
   <br>
   <p><a href="{% url 'movies:detail' first.id %}" style="color:black; text-decoration:none;">🥇{{first.title}}</a></p>
   <p><a href="{% url 'movies:detail' second.id %}" style="color:black; text-decoration:none;">🥈{{second.title}}</a></p>

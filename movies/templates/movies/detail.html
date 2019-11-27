@@ -19,23 +19,29 @@
           <p>주연: {{movie.cast}}</p>
           <p>장르: {{movie.genre}}</p>
           <p>관객수: {{movie.audience}}명</p>
+          <p>추천 수: {{movie.like_users.count}}</p>
+          <br>
+          <br>
 
           <form action="{% url 'movies:movie_like' movie.id %}" method="POST">
             {% csrf_token %}
             {% if user in movie.like_users.all %}
-              <input type="submit" value="👍🏻" >
+              <input type="submit" value="추천취소 👍🏻" >
             {% else %}
-              <input type="submit" value="👍🏻" >
+              <input type="submit" value="추천 👍🏻" >
             {% endif %}
           </form>
-          <p>{{movie.like_users.count}}</p>
         </div>
       </div>
 
     </div>
   </div>
     {% if user.is_authenticated %}
-    <form action="{% url 'movies:create_review' movie.id %}" method="POST">
+    {% if update == 0 %}
+      <form action="{% url 'movies:create_review' movie.id %}" method="POST">
+    {% else %}
+      <form action="{% url 'movies:update_review' movie.id review.id %}" method="POST">
+    {% endif %}
       {% csrf_token %}
       {% bootstrap_form form %}
       <input type="submit" value="제출" class="btn btn-primary">
@@ -51,7 +57,11 @@
       {% if review.user == user %}
         <form action="{% url 'movies:delete_review' movie.id review.id %}" method="POST">
           {% csrf_token %}
-          <input type="submit" class="btn btn-danger" value="삭제">
+          <input type="submit" class="btn btn-danger" value="삭제하기">
+        </form>
+        <form action="{% url 'movies:update_review' movie.id review.id %}" method="GET">
+          {% csrf_token %}
+          <input type="submit" class="btn btn-warning" value="수정하기">
         </form>
       {% endif %}
     </div>
