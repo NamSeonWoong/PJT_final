@@ -18,16 +18,23 @@
 {% endblock %}
 ​
 {%block body2%}
-  <h2>영화검색</h2>
-  <form action="{%url 'movies:search' %}" method="post" class="form-inline my-2 my-lg-0">
-    {%csrf_token%}
-    <input class="form-control mr-sm-2" type="search" placeholder="키워드를 입력해주세요." name="keyword">
-    <button class="btn btn-warning my-2 my-sm-0" type="submit">Search</button>
-  </form>
-  <br>
-  <h3>추천영화</h3>
-  <br>
-  <p><a href="{% url 'movies:detail' first.id %}" style="color:black; text-decoration:none;">🥇{{first.title}}</a></p>
-  <p><a href="{% url 'movies:detail' second.id %}" style="color:black; text-decoration:none;">🥈{{second.title}}</a></p>
-  <p><a href="{% url 'movies:detail' third.id %}" style="color:black; text-decoration:none;">🥉{{third.title}}</a></p>
-{%endblock%}
+  <div >
+    <br>
+    <br>
+    <h3>영화검색하기</h3>
+    <form action="{%url 'movies:search' %}" method="post" class="form-inline my-2 my-lg-0">
+      {%csrf_token%}
+      <input class="form-control mr-sm-2" type="search" placeholder="키워드를 입력해주세요." name="keyword">
+      <button class="btn btn-warning my-2 my-sm-0" type="submit">Search</button>
+    </form>
+    <br>
+    <hr>
+    <h3>오늘의 추천영화</h3>
+    <br>
+    <p><a href="{% url 'movies:detail' first.id %}" style="color:black; text-decoration:none;">🥇{{first.title}}</a></p>
+    <p><a href="{% url 'movies:detail' second.id %}" style="color:black; text-decoration:none;">🥈{{second.title}}</a></p>
+    <p><a href="{% url 'movies:detail' third.id %}" style="color:black; text-decoration:none;">🥉{{third.title}}</a></p>
+    <br>
+    <br>
+  </div>
+  {%endblock%}

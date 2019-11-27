@@ -50,22 +50,25 @@
   
   <hr>
   {% for review in movie.review_set.all %}
-    <div class="alert alert-primary d-flex justify-content-between" role="alert">
-      <p> 한줄평 : {{review.content}}</p>
-      <p> 평점 :  {{review.score}}</p>
+    <div class=" d-flex justify-content-between" role="alert">
+      <p> {{review.user}} : {{review.content}}</p>
+​
       
       {% if review.user == user %}
-        <form action="{% url 'movies:delete_review' movie.id review.id %}" method="POST">
-          {% csrf_token %}
-          <input type="submit" class="btn btn-danger" value="삭제하기">
-        </form>
+        <p style="position: absolute; right: 122px;"> 평점 :  {{review.score}}</p>
         <form action="{% url 'movies:update_review' movie.id review.id %}" method="GET">
           {% csrf_token %}
-          <input type="submit" class="btn btn-warning" value="수정하기">
+          <input type="submit" class="btn btn-warning" style="position: absolute; right: 57px;" value="수정">
         </form>
+        <form action="{% url 'movies:delete_review' movie.id review.id %}" method="POST">
+          {% csrf_token %}
+          <input type="submit" class="btn btn-danger" style="position: absolute; right: 0;" value="삭제">
+        </form>
+      {%else%}
+        <p> 평점 :  {{review.score}}</p>
       {% endif %}
+      
     </div>
   {% endfor %}
 
-  
 {% endblock %}

@@ -17,6 +17,9 @@
     div {
       font-family: 'Sunflower', sans-serif;
     }
+    body {
+      background-color:paleturquoise
+    }
   </style>
 </head>
 <body >
@@ -24,30 +27,31 @@
     <div class="w-100 position-fixed " style="z-index: 999;">
       <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <a class="navbar-brand" href="{% url 'movies:index' %}">🍿Home🥤</a>
+        
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button>
+        <div class="collapse navbar-collapse d-flex justify-content-center" id="navbarNavAltMarkup">
+          <img src="{% static 'slate.jpg' %}" width="45px" height="35px" style="padding-right:10px ;">
+          <h5 class="navbar-brand">오늘 영화 뭐볼까??</h5>
+        </div>
         <div class="collapse navbar-collapse d-flex justify-content-end" id="navbarNavAltMarkup">
           <div class="navbar-nav ">
-              <a class="nav-item nav-link" href="{% url 'accounts:index' %}">유저 정보보기</a>
+            
+              <a class="nav-item nav-link" href="{% url 'accounts:index' %}"><strong>유저 목록</strong></a>
             {% if user.is_authenticated %}
-              <h5 class="nav-item nav-link">{{user}}님 안녕하세요!</h5>
-              <a class="nav-item nav-link" href="{% url 'accounts:logout' %}">로그아웃</a>
+              <h5 class="nav-item nav-link"><strong>{{user}}님 안녕하세요!</strong></h5>
+              <a class="nav-item nav-link" href="{% url 'accounts:detail' user.id %}">My page</a>
+              <a class="nav-item nav-link" href="{% url 'accounts:logout' %}"><strong>로그아웃</strong></a>
             {% else %}
-              <a class="nav-item nav-link" href="{% url 'accounts:signup' %}">회원가입</a>
-              <a class="nav-item nav-link" href="{% url 'accounts:login' %}">로그인</a>
+              <a class="nav-item nav-link" href="{% url 'accounts:signup' %}"><strong>회원가입</strong></a>
+              <a class="nav-item nav-link" href="{% url 'accounts:login' %}"><strong>로그인</strong></a>
             {% endif %}
           </div>
         </div>
     </div>
-  
-    
-    <!-- <div class="container">
-      <img src="{% static 'main.webp' %}" style="margin-left: auto; margin-right: auto; display: block;" width="2000" height="250">
-    </div> -->
     
   </nav>
-
   <div class="row" style="padding-top: 5rem;padding-left:27rem;padding-right:2rem;">
     <div class="col-12 col-md-9">
       <!-- <div class="container"> -->
@@ -58,6 +62,10 @@
     <div class="col-12 col-md-3">
       {% block body2 %}
       {% endblock %}
+    </div>
+    <div class="col-4">
+      {%block body3%}
+      {%endblock%}
     </div>
   </div>
   

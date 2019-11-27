@@ -54,7 +54,6 @@ def index(request):
 def detail(request, id):
     user_model = get_user_model()
     user_info = get_object_or_404(user_model, id=id)
-
     context= {
         'user_info':user_info
     }

@@ -165,7 +165,7 @@ def movie_like(request, id):
         else:
             movie.like_users.add(user)
         
-        return redirect('movies:detail', id)
+    return redirect('movies:detail', id)
 
 def search(request):
     res = []
