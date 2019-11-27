@@ -28,7 +28,7 @@ headers = {
 # Cd = []
 # def start(request):
 #     startweek = datetime(2019, 11, 16)
-#     for k in range(15):
+#     for k in range(20):
 #         # 영진위 주간 api요청
 #         startweek_str = startweek.strftime("%Y%m%d")
 #         url = f'{movie_url}?key={movie_key}&targetDt={startweek_str}&movieCd&movieNm&audiCnt&weekGb=0'
