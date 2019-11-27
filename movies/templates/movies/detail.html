@@ -1,9 +1,7 @@
 {% extends 'base.html' %}
 {% load bootstrap4 %}
 {% block body %}
-<br>
-<br>
-<br>
+
   <div class="jumbotron">
     <div class="row">
       <div class="d-inline-flex align-items-start">  
@@ -36,19 +34,22 @@
 
     </div>
   </div>
+  <div class='col-6'>
     {% if user.is_authenticated %}
-    {% if update == 0 %}
-      <form action="{% url 'movies:create_review' movie.id %}" method="POST">
-    {% else %}
-      <form action="{% url 'movies:update_review' movie.id review.id %}" method="POST">
+      {% if update == 0 %}
+        <form action="{% url 'movies:create_review' movie.id %}" method="POST">
+      {% else %}
+        <form action="{% url 'movies:update_review' movie.id review.id %}" method="POST">
+      {% endif %}
+        {% csrf_token %}
+        {% bootstrap_form form %}
+        <input type="submit" value="제출" class="btn btn-primary">
+      </form>
     {% endif %}
-      {% csrf_token %}
-      {% bootstrap_form form %}
-      <input type="submit" value="제출" class="btn btn-primary">
-    </form>
-    {% endif %}
+  </div>
   
   <hr>
+  <h3 style="color:rgb(199, 190, 190);">영화 리뷰</h3>
   {% for review in movie.review_set.all %}
     <div class=" d-flex justify-content-between" role="alert">
       <p> {{review.user}} : {{review.content}}</p>

@@ -2,13 +2,13 @@
 {% load static %}
 {% load socialaccount %}
 {% block body %}
-<form action=""method="post">
-  {% csrf_token %}
-  {{form.as_p}}
-  <input type="submit">
-</form>
-<div style="padding:20px;">
-  <a href="{% provider_login_url 'kakao'  %}"><img src="{% static 'kakao.png' %}" alt="" width="200" height="80"></a>
-  <!-- <a class="btn btn-success" href="{% provider_login_url 'naver'  %}">네이버로그인</a> -->
+<div>
+  <form action=""method="post">
+    {% csrf_token %}
+    {{form.as_p}}
+    <input class="btn btn-primary" style="width: 100px; height: 40px;" type="submit">
+    <a class="d-inline" href="{% provider_login_url 'kakao'  %}"><img src="{% static 'kakao.png' %}" alt="" width="100" height="40"></a>
+  </form>
 </div>
+
 {% endblock %}

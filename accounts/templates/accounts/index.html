@@ -6,22 +6,18 @@
 {%endblock%}
 {%block body3%}
 <table class="table">
-  <thead class="thead-light ">
+  <!-- <thead class="thead-light ">
     <tr>
-      <!-- <th scope="col">사용자 목록</th> -->
       <th scope="col">아이디</th>
-      <!-- <th scope="col">Last</th>
-      <th scope="col">Handle</th> -->
     </tr>
-  </thead>
+  </thead> -->
   <tbody>
     {% for user_info in user_list %}
       <tr>
         <!-- <th scope="row">-</th> -->
-        <td><a href="{% url 'accounts:detail' user_info.id %}"><h5>{{user_info.username}}</h5></a></td>
+        <td><a href="{% url 'accounts:detail' user_info.id %}"><h5 style="color:white;">{{user_info.username}}</h5></a></td>
       </tr>
     {% endfor %}
-    
   </tbody>
 </table>
 {% endblock %}
