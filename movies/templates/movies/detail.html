@@ -1,6 +1,9 @@
 {% extends 'base.html' %}
 {% load bootstrap4 %}
 {% block body %}
+<br>
+<br>
+<br>
   <div class="jumbotron">
     <div class="row">
       <div class="d-inline-flex align-items-start">  
@@ -15,6 +18,7 @@
           <p>개봉일: {{movie.pubdate}}</p>
           <p>주연: {{movie.cast}}</p>
           <p>장르: {{movie.genre}}</p>
+          <p>관객수: {{movie.audience}}명</p>
 
           <form action="{% url 'movies:movie_like' movie.id %}" method="POST">
             {% csrf_token %}

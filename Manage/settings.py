@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     # 필요한 제공자 추가
     'allauth.socialaccount.providers.kakao',
     'allauth.socialaccount.providers.naver',
+    'bootstrap_pagination',
     'accounts',
     'bootstrap4',
     'movies',

@@ -8,6 +8,7 @@ import requests, datetime, json, os, sys
 import urllib.request
 from bs4 import BeautifulSoup
 from datetime import timedelta, datetime
+from django.core.paginator import Paginator
 
 # 영진위api 관련
 movie_key = config('MOVIE_KEY')
@@ -23,65 +24,68 @@ headers = {
     'X-Naver-Client-Secret' : naver_secret
 }
 
-movies=[]
-Cd = []
-def start(request):
-    startweek = datetime(2019, 11, 16)
-    for k in range(15):
-        # 영진위 주간 api요청
-        startweek_str = startweek.strftime("%Y%m%d")
-        url = f'{movie_url}?key={movie_key}&targetDt={startweek_str}&movieCd&movieNm&audiCnt&weekGb=0'
-        res = requests.get(url).json()
-        for i in range(10):
-            # 주간 정보들 1~10위까지
-            movie_Cd = res.get('boxOfficeResult').get('weeklyBoxOfficeList')[i].get('movieCd')
-            if not movie_Cd in Cd:
-                Cd.append(movie_Cd)
-                movie_audiAcc = res.get('boxOfficeResult').get('weeklyBoxOfficeList')[i].get('audiAcc')
-                movie_Nm = res.get('boxOfficeResult').get('weeklyBoxOfficeList')[i].get('movieNm')
-                movie_Dt = res.get('boxOfficeResult').get('weeklyBoxOfficeList')[i].get('openDt')
+# movies=[]
+# Cd = []
+# def start(request):
+#     startweek = datetime(2019, 11, 16)
+#     for k in range(15):
+#         # 영진위 주간 api요청
+#         startweek_str = startweek.strftime("%Y%m%d")
+#         url = f'{movie_url}?key={movie_key}&targetDt={startweek_str}&movieCd&movieNm&audiCnt&weekGb=0'
+#         res = requests.get(url).json()
+#         for i in range(10):
+#             # 주간 정보들 1~10위까지
+#             movie_Cd = res.get('boxOfficeResult').get('weeklyBoxOfficeList')[i].get('movieCd')
+#             if not movie_Cd in Cd:
+#                 Cd.append(movie_Cd)
+#                 movie_audiAcc = res.get('boxOfficeResult').get('weeklyBoxOfficeList')[i].get('audiAcc')
+#                 movie_Nm = res.get('boxOfficeResult').get('weeklyBoxOfficeList')[i].get('movieNm')
+#                 movie_Dt = res.get('boxOfficeResult').get('weeklyBoxOfficeList')[i].get('openDt')
 
-                # 영진위 상세정보 api요청
-                detailurl = f'{movie_detail}?key={movie_key}&movieCd={movie_Cd}'
-                res_detail = requests.get(detailurl).json()
-                movie_genre = res_detail.get('movieInfoResult').get('movieInfo').get('genres')[0].get('genreNm')
+#                 # 영진위 상세정보 api요청
+#                 detailurl = f'{movie_detail}?key={movie_key}&movieCd={movie_Cd}'
+#                 res_detail = requests.get(detailurl).json()
+#                 movie_genre = res_detail.get('movieInfoResult').get('movieInfo').get('genres')[0].get('genreNm')
 
-                # 네이버 api요청
-                naver_data = f'{naver_url}?query={movie_Nm}'
-                res_naver = requests.get(naver_data, headers = headers).json()
+#                 # 네이버 api요청
+#                 naver_data = f'{naver_url}?query={movie_Nm}'
+#                 res_naver = requests.get(naver_data, headers = headers).json()
 
-                if res_naver.get('items'):
-                    movie_cast = res_naver.get('items')[0].get('actor').split('|')
-                    movie_directors = res_naver.get('items')[0].get('director').split('|')
-                    img_url_code = res_naver.get("items")[0].get("link")[51:]
-                    img_url = f'https://movie.naver.com/movie/bi/mi/basic.nhn?code={img_url_code}'
-                    resp = requests.get(img_url)
-                    soup = BeautifulSoup(resp.content, 'html.parser')
-                    img = soup.select('#content > div.article > div.mv_info_area > div.poster > a > img')
-                    movie_img = img[0].get('src')
+#                 if res_naver.get('items'):
+#                     movie_cast = res_naver.get('items')[0].get('actor').split('|')
+#                     movie_directors = res_naver.get('items')[0].get('director').split('|')
+#                     img_url_code = res_naver.get("items")[0].get("link")[51:]
+#                     img_url = f'https://movie.naver.com/movie/bi/mi/basic.nhn?code={img_url_code}'
+#                     resp = requests.get(img_url)
+#                     soup = BeautifulSoup(resp.content, 'html.parser')
+#                     img = soup.select('#content > div.article > div.mv_info_area > div.poster > a > img')
+#                     movie_img = img[0].get('src')
  
-                    # 영화정보 추가
-                    movies.append([movie_Cd,movie_Nm,movie_genre,movie_Dt,movie_directors,movie_cast,movie_img,movie_audiAcc])
-        # 날짜 변경
-        startweek = startweek - timedelta(7)
-    # 누적 관객수에 따른 내림차순 정렬
-    movies.sort(key=lambda x:int(x[-1]), reverse=True)
+#                     # 영화정보 추가
+#                     movies.append([movie_Cd,movie_Nm,movie_genre,movie_Dt,movie_directors,movie_cast,movie_img,movie_audiAcc])
+#         # 날짜 변경
+#         startweek = startweek - timedelta(7)
+#     # 누적 관객수에 따른 내림차순 정렬
+#     movies.sort(key=lambda x:int(x[-1]), reverse=True)
 
-    for i in range(len(movies)):
-        Movie.objects.create(
-            title = movies[i][1],
-            pubdate = movies[i][3],
-            poster_url = movies[i][6],
-            director = movies[i][4],
-            cast = movies[i][5],
-            genre = movies[i][2],
-            audience = movies[i][0]
-        )
-    return redirect('movies:index')
+#     for i in range(len(movies)):
+#         Movie.objects.create(
+#             title = movies[i][1],
+#             pubdate = movies[i][3],
+#             poster_url = movies[i][6],
+#             director = movies[i][4],
+#             cast = movies[i][5],
+#             genre = movies[i][2],
+#             audience = movies[i][-1]
+#         )
+#     return redirect('movies:index')
 
 
 def index(request):
     movies = Movie.objects.all()
+    paginator = Paginator(movies, 9) 
+    page = request.GET.get('page')
+    movies = paginator.get_page(page)
     context = {
         'movies': movies
     }

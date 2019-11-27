@@ -1,14 +1,26 @@
-
 {% extends 'base.html' %}
+{% load bootstrap_pagination %}
+
 {% block body %}
+  {% if user.is_authenticated %}
+    <br>
+    <br>
+    <br>
+  {% else %}
+    <br>
+    <br>
+  {% endif %}
   <div class="row">
     {% for movie in movies %}
-      <div class="card" style="width: 20rem;">
+      <div class="card mr-3 mt-3"  style="width: 20rem;">
         <a href="{% url 'movies:detail' movie.id %}"><img src="{{movie.poster_url}}" class="card-img-top" alt="..."></a>
         <div class="card-body">
           <h5 class="card-title">{{movie.title}}</h5>
         </div>
       </div>
     {% endfor %}
+  </div>
+  <div class="container" style="justify-content: center;" >
+    {% bootstrap_paginate movies %}
   </div>
 {% endblock %}

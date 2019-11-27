@@ -1,8 +1,11 @@
 {% extends 'base.html' %}
 {% block body %}
+<br>
+<br>
+<br>
 <h2>아이디 : {{user_info.username}}</h2>
-<h2>성 : {{user_info.first_name}}</h2>
-<h2>이름 : {{user_info.last_name}}</h2>
+<!-- <h2>이름 : {{user_info.username}}</h2> -->
+<!-- <h2>이름 : {{user_info.last_name}}</h2> -->
 <hr>
 <h3>작성한 평점 정보</h3>
 {% for review in user_info.review_set.all %}
