@@ -1,8 +1,6 @@
 {% extends 'base.html' %}
 {% block body %}
 <h2 style="color:white;">아이디 : {{user_info.username}}</h2>
-<!-- <h2>이름 : {{user_info.username}}</h2> -->
-<!-- <h2>이름 : {{user_info.last_name}}</h2> -->
 <hr style="border:solid 0.7px white;">
 <h3 style="color:white;">작성한 평점 정보</h3>
 <br>
@@ -23,12 +21,23 @@
 </div>
 {% if user.is_authenticated and user != user_info %}
   {% if user in user_info.followers.all %}
-    <a class='d-block' href="{% url 'accounts:follow' user_info.id %}" style="color:white;">팔로우취소</a>
+    <a href="{% url 'accounts:follow' user_info.id %}" style="color:white;">팔로우취소</a>
   {% else %}
-    <a class='d-block' href="{% url 'accounts:follow' user_info.id %}" style="color:white;">팔로우하기</a>
+    <a href="{% url 'accounts:follow' user_info.id %}" style="color:white;">팔로우하기</a>
   {% endif %}
 {% endif %}
-
+<br>
+<br>
+<h5 style="color:white;">팔로워</h5>
+{% for user in user_info.followers.all %}
+  <a href="{% url 'accounts:detail' user.id %}" class="d-inline" style="color:white;">{{user}}</a>
+{% endfor %}
+<br>
+<br>
+<h5 style="color:white;">팔로잉</h5>
+{% for user in user_info.followings.all %}
+  <a href="{% url 'accounts:detail' user.id %}" class="d-inline" style="color:white;">{{user}}</a>
+{% endfor %}
 <hr style="border:solid 0.7px white;">
 <h3 style="color:white;">좋아하는 영화</h3>
 <div class="row">
