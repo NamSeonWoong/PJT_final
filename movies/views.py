@@ -171,7 +171,11 @@ def search(request):
     res = []
     if request.method == 'POST':
         keyword = request.POST.get("keyword")
-        movies = Movie.objects.filter(title__icontains=keyword)
+        option = request.POST.get("target")
+        if option == "title":
+            movies = Movie.objects.filter(title__icontains=keyword)
+        else:
+            movies = Movie.objects.filter(genre__icontains=keyword)
         paginator = Paginator(movies, 9) 
         page = request.GET.get('page')
         movies = paginator.get_page(page)

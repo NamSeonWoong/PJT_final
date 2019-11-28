@@ -34,7 +34,7 @@
 
     </div>
   </div>
-  <div class='col-6'>
+  <div class='col-6' style="color:white;">
     {% if user.is_authenticated %}
       {% if update == 0 %}
         <form action="{% url 'movies:create_review' movie.id %}" method="POST">
@@ -51,8 +51,8 @@
   <hr>
   <h3 style="color:rgb(199, 190, 190);">영화 리뷰</h3>
   {% for review in movie.review_set.all %}
-    <div class=" d-flex justify-content-between" role="alert">
-      <p> {{review.user}} : {{review.content}}</p>
+    <div class=" d-flex justify-content-between" role="alert" style="color:white;">
+      <p > {{review.user}} : {{review.content}}</p>
 ​
       
       {% if review.user == user %}

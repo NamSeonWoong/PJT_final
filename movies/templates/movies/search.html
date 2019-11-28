@@ -19,16 +19,21 @@
 {% endblock %}
 
 {%block body2%}
-  <h2>영화검색</h2>
+  <h2 style="color:white;">영화검색</h2>
   <form action="{%url 'movies:search' %}" method="post" class="form-inline my-2 my-lg-0">
     {%csrf_token%}
+    <select name="target" class="custom-select my-1 mr-sm-2" id="inlineFormCustomSelectPref">
+      <!-- <option selected value="title" >Choose</option> -->
+      <option value="title">제목</option>
+      <option value="genre">장르</option>
+    </select>
     <input class="form-control mr-sm-2" type="search" placeholder="키워드를 입력해주세요." name="keyword">
     <button class="btn btn-warning my-2 my-sm-0" type="submit">Search</button>
   </form>
   <br>
-  <h3 class="mt-5">추천영화</h3>
+  <h3 class="mt-5" style="color:white;">추천영화</h3>
   <br>
-  <p><a href="{% url 'movies:detail' first.id %}" style="color:black; text-decoration:none;">🥇{{first.title}}</a></p>
-  <p><a href="{% url 'movies:detail' second.id %}" style="color:black; text-decoration:none;">🥈{{second.title}}</a></p>
-  <p><a href="{% url 'movies:detail' third.id %}" style="color:black; text-decoration:none;">🥉{{third.title}}</a></p>
+  <p><a href="{% url 'movies:detail' first.id %}" style="color:white; text-decoration:none;">🥇{{first.title}}</a></p>
+  <p><a href="{% url 'movies:detail' second.id %}" style="color:white; text-decoration:none;">🥈{{second.title}}</a></p>
+  <p><a href="{% url 'movies:detail' third.id %}" style="color:white; text-decoration:none;">🥉{{third.title}}</a></p>
 {%endblock%}

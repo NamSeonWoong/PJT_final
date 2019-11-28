@@ -7,7 +7,14 @@
       <div class="card mr-3 mt-3"  style="width: 20rem;">
         <a href="{% url 'movies:detail' movie.id %}"><img src="{{movie.poster_url}}" class="card-img-top" alt="..."></a>
         <div class="card-body">
+          {% if movie.title == "알라딘" %}
+            <h5 class="card-title">🧞‍♂️ {{movie.title}}</h5>
+          {% elif movie.genre == "멜로/로맨스" %}
+            <h5 class="card-title">💏 {{movie.title}}</h5>
+          {% else %}
           <h5 class="card-title">{{movie.title}}</h5>
+          {% endif %}
+          
         </div>
       </div>
     {% endfor %}
@@ -21,19 +28,26 @@
   <div >
     <br>
     <br>
-    <h3>영화검색하기</h3>
+    <h3 style="color:white;">영화검색하기</h3>
+    
     <form action="{%url 'movies:search' %}" method="post" class="form-inline my-2 my-lg-0">
       {%csrf_token%}
+      <select name="target" class="custom-select my-1 mr-sm-2" id="inlineFormCustomSelectPref">
+        <!-- <option selected value="title" >Choose</option> -->
+        <option value="title">제목</option>
+        <option value="genre">장르</option>
+        <!-- <option value="etc">Three</option> -->
+      </select>
       <input class="form-control mr-sm-2" type="search" placeholder="키워드를 입력해주세요." name="keyword">
       <button class="btn btn-warning my-2 my-sm-0" type="submit">Search</button>
     </form>
     <br>
     <hr>
-    <h3>오늘의 추천영화</h3>
+    <h3 style="color:white;">오늘의 추천영화</h3>
     <br>
-    <p><a href="{% url 'movies:detail' first.id %}" style="color:black; text-decoration:none;">🥇{{first.title}}</a></p>
-    <p><a href="{% url 'movies:detail' second.id %}" style="color:black; text-decoration:none;">🥈{{second.title}}</a></p>
-    <p><a href="{% url 'movies:detail' third.id %}" style="color:black; text-decoration:none;">🥉{{third.title}}</a></p>
+    <p><a href="{% url 'movies:detail' first.id %}" style="color:white; text-decoration:none;">🥇{{first.title}}</a></p>
+    <p><a href="{% url 'movies:detail' second.id %}" style="color:white; text-decoration:none;">🥈{{second.title}}</a></p>
+    <p><a href="{% url 'movies:detail' third.id %}" style="color:white; text-decoration:none;">🥉{{third.title}}</a></p>
     <br>
     <br>
   </div>

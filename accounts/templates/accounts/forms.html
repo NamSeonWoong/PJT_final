@@ -3,7 +3,7 @@
 {% load socialaccount %}
 {% block body %}
 <div>
-  <form action=""method="post">
+  <form action=""method="post" style="color:white;">
     {% csrf_token %}
     {{form.as_p}}
     <input class="btn btn-primary" style="width: 100px; height: 40px;" type="submit">
