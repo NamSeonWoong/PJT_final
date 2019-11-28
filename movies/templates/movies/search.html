@@ -7,7 +7,98 @@
       <div class="card mr-3 mt-3"  style="width: 20rem;">
         <a href="{% url 'movies:detail' movie.id %}"><img src="{{movie.poster_url}}" class="card-img-top" alt="..."></a>
         <div class="card-body">
-          <h5 class="card-title">{{movie.title}}</h5>
+          {% if movie.title == "알라딘" %}
+            <h5 class="card-title d-inline">🧞‍♂️ {{movie.title}} </h5>
+            {% for title, score in scores.items %}
+              {% if title == "알라딘" %}
+                {% if score != 0 %}
+                  <h5 class='d-inline' style="float:right;"><small>⭐ {{score}}</small></h5>
+                {%endif%}
+              {% endif %}
+            {% endfor %}
+          {% elif movie.title == "기생충" %}
+            <h5 class="card-title d-inline">🐛 {{movie.title}}</h5>
+            {% for title, score in scores.items %}
+              {% if title == "기생충" %}
+                {% if score != 0 %}
+                  <h5 class='d-inline' style="float:right;"><small>⭐ {{score}}</small></h5>
+                {%endif%}
+              {% endif %}
+            {% endfor %}
+          {% elif movie.title == "조커" %}
+            <h5 class="card-title d-inline">🃏 {{movie.title}}</h5>
+            {% for title, score in scores.items %}
+              {% if title == "조커" %}
+                {% if score != 0 %}
+                  <h5 class='d-inline' style="float:right;"><small>⭐ {{score}}</small></h5>
+                {%endif%}
+              {% endif %}
+            {% endfor %}
+          {% elif movie.title == "라이온 킹" %}
+            <h5 class="card-title d-inline">🦁 {{movie.title}}</h5>
+            {% for title, score in scores.items %}
+              {% if title == "라이온 킹" %}
+                {% if score != 0 %}
+                  <h5 class='d-inline' style="float:right;"><small>⭐ {{score}}</small></h5>
+                {%endif%}
+              {% endif %}
+            {% endfor %}
+          {% elif movie.title == "토이 스토리 4" %}
+            <h5 class="card-title d-inline">🤖 {{movie.title}}</h5>
+            {% for title, score in scores.items %}
+              {% if title == "토이 스토리 4" %}
+                {% if score != 0 %}
+                  <h5 class='d-inline' style="float:right;"><small>⭐ {{score}}</small></h5>
+                {%endif%}
+              {% endif %}
+            {% endfor %}
+          {% elif movie.title == "블랙머니" %}
+            <h5 class="card-title d-inline">💰 {{movie.title}}</h5>
+            {% for title, score in scores.items %}
+              {% if title == "블랙머니" %}
+                {% if score != 0 %}
+                  <h5 class='d-inline' style="float:right;"><small>⭐ {{score}}</small></h5>
+                {%endif%}
+              {% endif %}
+            {% endfor %}
+          {% elif movie.title == "스파이더맨: 파 프롬 홈" %}
+            <h5 class="card-title d-inline">🕷 {{movie.title}}</h5>
+            {% for title, score in scores.items %}
+              {% if title == "스파이더맨: 파 프롬 홈" %}
+                {% if score != 0 %}
+                  <h5 class='d-inline' style="float:right;"><small>⭐ {{score}}</small></h5>
+                {%endif%}
+              {% endif %}
+            {% endfor %}
+          {% elif movie.genre == "멜로/로맨스" %}
+            <h5 class="card-title d-inline">💏 {{movie.title}}</h5>
+            {% for title, score in scores.items %}
+              {% if title == movie.title %}
+                {% if score != 0 %}
+                  <h5 class='d-inline' style="float:right;"><small>⭐ {{score}}</small></h5>
+                {%endif%}
+              {% endif %}
+            {% endfor %}
+          {% elif movie.genre == "스릴러" %}
+            <h5 class="card-title d-inline">👁 {{movie.title}}</h5>
+            {% for title, score in scores.items %}
+              {% if title == movie.title %}
+                {% if score != 0 %}
+                  <h5 class='d-inline' style="float:right;"><small>⭐ {{score}}</small></h5>
+                {%endif%}
+              {% endif %}
+            {% endfor %}
+          {% else %}
+          <h5 class="card-title d-inline">{{movie.title}}</h5>
+          {% for title, score in scores.items %}
+              {% if title == movie.title %}
+                {% if score != 0 %}
+                  <h5 class='d-inline' style="float:right;"><small>⭐ {{score}}</small></h5>
+                {%endif%}
+              {% endif %}
+            {% endfor %}
+          {% endif %}
+        
         </div>
       </div>
     {% endfor %}

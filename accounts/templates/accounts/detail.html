@@ -23,9 +23,9 @@
 </div>
 {% if user.is_authenticated and user != user_info %}
   {% if user in user_info.followers.all %}
-    <a href="{% url 'accounts:follow' user_info.id %}" style="color:white;">팔로우취소</a>
+    <a class='d-block' href="{% url 'accounts:follow' user_info.id %}" style="color:white;">팔로우취소</a>
   {% else %}
-    <a href="{% url 'accounts:follow' user_info.id %}" style="color:white;">팔로우</a>
+    <a class='d-block' href="{% url 'accounts:follow' user_info.id %}" style="color:white;">팔로우하기</a>
   {% endif %}
 {% endif %}
 

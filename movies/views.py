@@ -24,49 +24,55 @@ headers = {
     'X-Naver-Client-Secret' : naver_secret
 }
 
-# movies=[]
-# Cd = []
+movies=[]
+Cd = []
+
+# d = [datetime.today().strftime('%Y, %m, %d')]
+
 # def start(request):
-#     startweek = datetime(2019, 11, 16)
-#     for k in range(20):
-#         # 영진위 주간 api요청
-#         startweek_str = startweek.strftime("%Y%m%d")
-#         url = f'{movie_url}?key={movie_key}&targetDt={startweek_str}&movieCd&movieNm&audiCnt&weekGb=0'
-#         res = requests.get(url).json()
-#         for i in range(10):
-#             # 주간 정보들 1~10위까지
-#             movie_Cd = res.get('boxOfficeResult').get('weeklyBoxOfficeList')[i].get('movieCd')
-#             if not movie_Cd in Cd:
-#                 Cd.append(movie_Cd)
-#                 movie_audiAcc = res.get('boxOfficeResult').get('weeklyBoxOfficeList')[i].get('audiAcc')
-#                 movie_Nm = res.get('boxOfficeResult').get('weeklyBoxOfficeList')[i].get('movieNm')
-#                 movie_Dt = res.get('boxOfficeResult').get('weeklyBoxOfficeList')[i].get('openDt')
+startweek = datetime.today()- timedelta(7)
+for k in range(1):
+    # 영진위 주간 api요청
+    startweek_str = startweek.strftime("%Y%m%d")
+    print(startweek_str)
+    url = f'{movie_url}?key={movie_key}&targetDt={startweek_str}&movieCd&movieNm&audiCnt&weekGb=0'
+    res = requests.get(url).json()
+    for i in range(7):
+        # 주간 정보들 1~10위까지
+        # movie_Cd = res.get('boxOfficeResult').get('weeklyBoxOfficeList')[i].get('movieCd')
+        # if not movie_Cd in Cd:
+        # Cd.append(movie_Cd)
+            # movie_audiAcc = res.get('boxOfficeResult').get('weeklyBoxOfficeList')[i].get('audiAcc')
+        movie_Nm = res.get('boxOfficeResult').get('weeklyBoxOfficeList')[i].get('movieNm')
+            # movie_Dt = res.get('boxOfficeResult').get('weeklyBoxOfficeList')[i].get('openDt')
 
-#                 # 영진위 상세정보 api요청
-#                 detailurl = f'{movie_detail}?key={movie_key}&movieCd={movie_Cd}'
-#                 res_detail = requests.get(detailurl).json()
-#                 movie_genre = res_detail.get('movieInfoResult').get('movieInfo').get('genres')[0].get('genreNm')
+            # 영진위 상세정보 api요청
+            # detailurl = f'{movie_detail}?key={movie_key}&movieCd={movie_Cd}'
+            # res_detail = requests.get(detailurl).json()
+            # movie_genre = res_detail.get('movieInfoResult').get('movieInfo').get('genres')[0].get('genreNm')
 
-#                 # 네이버 api요청
-#                 naver_data = f'{naver_url}?query={movie_Nm}'
-#                 res_naver = requests.get(naver_data, headers = headers).json()
+            # # 네이버 api요청
+            # naver_data = f'{naver_url}?query={movie_Nm}'
+            # res_naver = requests.get(naver_data, headers = headers).json()
 
-#                 if res_naver.get('items'):
-#                     movie_cast = res_naver.get('items')[0].get('actor').split('|')
-#                     movie_directors = res_naver.get('items')[0].get('director').split('|')
-#                     img_url_code = res_naver.get("items")[0].get("link")[51:]
-#                     img_url = f'https://movie.naver.com/movie/bi/mi/basic.nhn?code={img_url_code}'
-#                     resp = requests.get(img_url)
-#                     soup = BeautifulSoup(resp.content, 'html.parser')
-#                     img = soup.select('#content > div.article > div.mv_info_area > div.poster > a > img')
-#                     movie_img = img[0].get('src')
- 
-#                     # 영화정보 추가
-#                     movies.append([movie_Cd,movie_Nm,movie_genre,movie_Dt,movie_directors,movie_cast,movie_img,movie_audiAcc])
-#         # 날짜 변경
-#         startweek = startweek - timedelta(7)
-#     # 누적 관객수에 따른 내림차순 정렬
-#     movies.sort(key=lambda x:int(x[-1]), reverse=True)
+            # if res_naver.get('items'):
+            #     movie_cast = res_naver.get('items')[0].get('actor').split('|')
+            #     movie_directors = res_naver.get('items')[0].get('director').split('|')
+            #     img_url_code = res_naver.get("items")[0].get("link")[51:]
+            #     img_url = f'https://movie.naver.com/movie/bi/mi/basic.nhn?code={img_url_code}'
+            #     resp = requests.get(img_url)
+            #     soup = BeautifulSoup(resp.content, 'html.parser')
+            #     img = soup.select('#content > div.article > div.mv_info_area > div.poster > a > img')
+            #     movie_img = img[0].get('src')
+
+                # 영화정보 추가
+                # movies.append([movie_Cd,movie_Nm,movie_genre,movie_Dt,movie_directors,movie_cast,movie_img,movie_audiAcc])
+        movies.append([movie_Nm])
+print(movies)
+    # 날짜 변경
+    # startweek = startweek - timedelta(7)
+# 누적 관객수에 따른 내림차순 정렬
+# movies.sort(key=lambda x:int(x[-1]), reverse=True)
 
 #     for i in range(len(movies)):
 #         Movie.objects.create(
@@ -87,9 +93,25 @@ def index(request):
     paginator = Paginator(movies, 9) 
     page = request.GET.get('page')
     movies = paginator.get_page(page)
-    for movie in Movie.objects.all():
-        res.append([movie.title,movie.like_users.count(),movie.id])
+    reviews = Review.objects.all()
+    scores = {}
+    
+    for moviee in Movie.objects.all():
+        res.append([moviee.title,moviee.like_users.count(),moviee.id])
+        s = 0
+        cnt = 0
+        for review in reviews:
+            if moviee.title == review.movie.title:
+                s += review.score
+                cnt += 1
+        if cnt == 0:
+            avg = 0
+        else:
+            avg = round(s/cnt,1)
+        scores[f'{moviee.title}'] = avg
+        
 
+    
     res.sort(key=lambda x:x[1], reverse=True)
     first = {'title': res[0][0], 'id': res[0][2]}
     second = {'title': res[1][0], 'id': res[1][2]}
@@ -98,7 +120,8 @@ def index(request):
         'movies': movies,
         'first': first,
         'second': second,
-        'third': third
+        'third': third,
+        'scores': scores
     }
     return render(request, 'movies/index.html', context)
 
